@@ -1,0 +1,37 @@
+<?xml version='1.1' encoding='utf-8'?>
+<plugin id="cordova-plugin-pxinapp" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>GDApi</name>
+    <js-module name="pxInapp" src="www/pxInapp.js">
+        <clobbers target="orangegames.cordova.plugins.pxInapp"/>
+    </js-module>
+    <keywords></keywords>
+    <platform name="android">
+        <config-file parent="/*" target="config.xml">
+            <feature name="pxInapp">
+                <param name="android-package" value="orangegames.plugin.cordova.pxInapp"/>
+            </feature>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="android.permission.SEND_SMS" />
+            <uses-permission android:name="android.permission.RECEIVE_SMS" />
+            <uses-permission android:name="android.permission.READ_SMS" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+        </config-file>
+
+        <lib-file src="src/android/libs/arm64-v8a/libpxinapp.so" arch="device" />
+        <lib-file src="src/android/libs/armebi/libpxinapp.so" arch="device" />
+        <lib-file src="src/android/libs/armebi-v7a/libpxinapp.so" arch="device" />
+        <lib-file src="src/android/libs/mips/libpxinapp.so" arch="device" />
+        <lib-file src="src/android/libs/mips64/libpxinapp.so" arch="device" />
+        <lib-file src="src/android/libs/x86/libpxinapp.so" arch="device" />
+        <lib-file src="src/android/libs/x86_64/libpxinapp.so" arch="device" />
+        <source-file src="src/android/libs/pxinapp.jar" target-dir="libs" framework="true"/>
+
+        <source-file src="src/android/PxInapp.java" target-dir="src/plugin/cordova/pxInapp"/>
+    </platform>
+</plugin>

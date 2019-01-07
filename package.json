@@ -1,0 +1,26 @@
+{
+  "name": "@gamedistribution.com/cordova-plugin-pxinapp",
+  "version": "0.0.1",
+  "description": "git@github.com:orange-games/cordova-plugin-pxinapp.git",
+  "cordova": {
+    "id": "cordova-plugin-pxinapp",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": "git@github.com:orange-games/cordova-plugin-pxinapp.git",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "orangegames.com",
+  "contributors":[
+    {
+      "name":"Ale Bles",
+      "email": "a.bles@orangegames.com"
+    }
+  ],
+  "license": "https://github.com/orange-games/cordova-plugin-pxinapp/raw/master/LICENSE",
+  "bugs": "https://github.com/orange-games/cordova-plugin-pxinapp/issues",
+  "homepage": "https://github.com/orange-games/cordova-plugin-pxinapp#README.md"
+}
