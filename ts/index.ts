@@ -5,6 +5,7 @@ class PXInApp {
         }
 
         (window as any).plugins.pxInapp = new PXInApp();
+        (window as any).enums.UI_MODE = UIMode;
     }
 
     public setup(id: any, mode: UIMode, test: any): Promise<void> {
