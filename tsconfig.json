@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "target": "es5",
+        "lib": ["es2015", "dom"],
+        "outFile": "./www/pxInapp.js",
+        "sourceMap": false,
+        "declaration": false,
+        "noImplicitAny": true
+    },
+    "include": [
+        "./ts/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -6,6 +6,8 @@
     <repo>https://github.com/orange-games/cordova-plugin-pxinapp.git</repo>
     <issue>https://github.com/orange-games/cordova-plugin-pxinapp/issues</issue>
 
+    <dependency id="es6-promise-plugin" version="^4.2.2" />
+
     <js-module name="pxInapp" src="www/pxInapp.js">
         <clobbers target="window.plugins.pxInapp"/>
     </js-module>
