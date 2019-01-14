@@ -6,24 +6,32 @@ var UIMode;
 })(UIMode || (UIMode = {}));
 var PXInApp = /** @class */ (function () {
     function PXInApp() {
-        if (!window.hasOwnProperty('plugins')) {
-            window.plugins = {};
-        }
-        window.plugins.pxInapp = new PXInApp();
+        //
     }
     PXInApp.prototype.setup = function (id, mode, test) {
-        var options = {};
-        options.id = id;
-        options.mode = mode;
-        options.test = test || false;
         return new Promise(function (resolve, reject) {
             cordova.exec(function (result) {
                 resolve(result);
             }, function (error) {
                 reject(error);
-            }, 'PXInApp', 'setup', [options]);
+            }, 'PXInApp', 'setup', [{
+                    id: id,
+                    mode: mode,
+                    test: test || false
+                }]);
+        });
+    };
+    PXInApp.prototype.fetchProduct = function (productId) {
+        return new Promise(function (resolve, reject) {
+            cordova.exec(function (result) {
+                resolve(result);
+            }, function (error) {
+                reject(error);
+            }, 'PXInApp', 'getProduct', [{
+                    productId: productId
+                }]);
         });
     };
     return PXInApp;
 }());
-new PXInApp();
+window.pxInApp = new PXInApp();

@@ -31,7 +31,27 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
         callbackContext.sendPluginResult(pluginResult);
         return true;
+      } else if (result == PXInapp.RESULT_FAILED) {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "Failed to initialise PXINAPP");
+        callbackContext.sendPluginResult(pluginResult);
+        return false;
+      } else {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, result);
+        callbackContext.sendPluginResult(pluginResult);
+        return false;
       }
+    } else if ("getProduct".equals(action)) {
+      int productId = options.getInt("productId");
+      String product = this.fetchProduct(productId);
+
+      if (null == product) {
+        callbackContext.error("No product found for id: " + productId);
+        return false;
+      }
+
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, product);
+      callbackContext.sendPluginResult(pluginResult);
+      return true;
     }
 
     return false; // Returning false results in a "MethodNotFound" error.
@@ -82,7 +102,7 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
   }
 
   private int setup(String pxId, int mode, Boolean testMode) {
-    Context context = this.cordova.getActivity().getApplicationContext();
+    Context context = this.cordova.getActivity();
 
     int uiModeEnum = PXInapp.UI_MODE_HYBRID;
     switch (mode) {
@@ -98,7 +118,8 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
       break;
     }
 
-    int result = PXInapp.create(context, pxId, uiModeEnum, testMode);
+    // int result = PXInapp.create(context, pxId, uiModeEnum, testMode);
+    int result = PXInapp.create(context, "A024805525452923568167231278837943681DC0739", PXInapp.UI_MODE_SDK, true);
     PXInapp.setPaymentCallback(this);
     //This one is needed if the ui mode isn't (!!!)  UI_MODE_SDK
     // PXInapp.setProductDialogCallback(context);
@@ -108,5 +129,11 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
   @Override
   public void onPayment( PXInappProduct product, int result ) {
     
+  }
+
+  private String fetchProduct(int productId) {
+    PXInappProduct product = PXInapp.getInappProduct(productId);
+    
+    return product.priceString;
   }
 }
