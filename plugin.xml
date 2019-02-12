@@ -1,5 +1,5 @@
 <?xml version='1.1' encoding='utf-8'?>
-<plugin id="cordova-plugin-pxinapp" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-pxinapp" version="0.0.4" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>GDApi</name>
 
     <keywords></keywords>
@@ -11,6 +11,8 @@
     <js-module name="pxInapp" src="www/pxInapp.js">
         <clobbers target="window.plugins.pxInapp"/>
     </js-module>
+
+    <hook type="before_compile" src="hooks/copyBinFile.js" />
 
     <platform name="android">
         <config-file parent="/*" target="config.xml">
@@ -31,14 +33,14 @@
             <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
         </config-file>
 
-        <lib-file src="src/android/libs/arm64-v8a/libpxinapp.so" arch="device" />
-        <lib-file src="src/android/libs/armeabi/libpxinapp.so" arch="device" />
-        <lib-file src="src/android/libs/armeabi-v7a/libpxinapp.so" arch="device" />
-        <lib-file src="src/android/libs/mips/libpxinapp.so" arch="device" />
-        <lib-file src="src/android/libs/mips64/libpxinapp.so" arch="device" />
-        <lib-file src="src/android/libs/x86/libpxinapp.so" arch="device" />
-        <lib-file src="src/android/libs/x86_64/libpxinapp.so" arch="device" />
-        <source-file src="src/android/libs/pxinapp.jar" target-dir="libs" framework="true"/>
+        <lib-file src="libs/pxinapp.jar" arch="device" />
+        <resource-file src="libs/arm64-v8a/libpxinapp.so" target="jniLibs/arm64-v8a/libpxinapp.so" />
+        <resource-file src="libs/armeabi/libpxinapp.so" target="jniLibs/armeabi/libpxinapp.so" />
+        <resource-file src="libs/armeabi-v7a/libpxinapp.so" target="jniLibs/armeabi-v7/libpxinapp.so" />
+        <resource-file src="libs/mips/libpxinapp.so" target="jniLibs/mips/libpxinapp.so" />
+        <resource-file src="libs/mips64/libpxinapp.so" target="jniLibs/mips64/libpxinapp.so" />
+        <resource-file src="libs/x86/libpxinapp.so" target="jniLibs/x86/libpxinapp.so" />
+        <resource-file src="libs/x86_64/libpxinapp.so" target="jniLibs/x86_64/libpxinapp.so" />
 
         <source-file src="src/android/PXInApp.java" target-dir="src/com/orangegames/cordova/plugin"/>
     </platform>

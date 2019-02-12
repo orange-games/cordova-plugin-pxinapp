@@ -1,6 +1,6 @@
 {
   "name": "@orange-games/cordova-plugin-pxinapp",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "git@github.com:orange-games/cordova-plugin-pxinapp.git",
   "cordova": {
     "id": "cordova-plugin-pxinapp",

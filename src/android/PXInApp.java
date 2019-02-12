@@ -28,11 +28,11 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
       int result = this.setup(options.getString("id"), options.getInt("mode"), options.getBoolean("test"));
 
       if (result == PXInapp.RESULT_SUCCESS) {
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
         callbackContext.sendPluginResult(pluginResult);
         return true;
       } else if (result == PXInapp.RESULT_FAILED) {
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "Failed to initialise PXINAPP");
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "Failed to initialise PXINAPP: " + Integer.toString(result));
         callbackContext.sendPluginResult(pluginResult);
         return false;
       } else {
@@ -45,7 +45,8 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
       String product = this.fetchProduct(productId);
 
       if (null == product) {
-        callbackContext.error("No product found for id: " + productId);
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "No product found for id: " + Integer.toString(productId));
+        callbackContext.sendPluginResult(pluginResult);
         return false;
       }
 
