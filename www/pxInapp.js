@@ -32,6 +32,17 @@ var PXInApp = /** @class */ (function () {
                 }]);
         });
     };
+    PXInApp.prototype.buyProduct = function (productId) {
+        return new Promise(function (resolve, reject) {
+            cordova.exec(function (result) {
+                resolve(result);
+            }, function (error) {
+                reject(error);
+            }, 'PXInApp', 'buyProduct', [{
+                    productId: productId
+                }]);
+        });
+    };
     return PXInApp;
 }());
 window.pxInApp = new PXInApp();

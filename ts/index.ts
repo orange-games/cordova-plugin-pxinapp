@@ -28,6 +28,18 @@ class PXInApp {
             }]);
         })
     }
+
+    public buyProduct(productId: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+            cordova.exec(function (result) {
+                resolve(result)
+            }, function (error) {
+                reject(error);
+            }, 'PXInApp', 'buyProduct', [{
+                productId: productId
+            }]);
+        });
+    }
 }
 
 (window as any).pxInApp = new PXInApp();

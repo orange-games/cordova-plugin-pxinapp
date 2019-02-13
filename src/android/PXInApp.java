@@ -13,7 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
+public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, PXInapp.ProductDialogCallback {
+  private int uiMode;
+  
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     JSONObject options;
@@ -51,6 +53,19 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
       }
 
       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, product);
+      callbackContext.sendPluginResult(pluginResult);
+      return true;
+    } else if ("buyProduct".equals(action)) {
+      int productId = options.getInt("productId");
+      int productResult = this.buyProduct(productId);
+
+      if (PXInapp.RESULT_SUCCESS != productResult) {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "Unable to purchase product: " + Integer.toString(productId) + ", reason: " + Integer.toString(productResult));
+        callbackContext.sendPluginResult(pluginResult);
+        return false;
+      }
+
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, productResult);
       callbackContext.sendPluginResult(pluginResult);
       return true;
     }
@@ -105,25 +120,28 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
   private int setup(String pxId, int mode, Boolean testMode) {
     Context context = this.cordova.getActivity();
 
-    int uiModeEnum = PXInapp.UI_MODE_HYBRID;
+    this.uiMode = PXInapp.UI_MODE_HYBRID;
     switch (mode) {
     case 0:
     default:
-      uiModeEnum = PXInapp.UI_MODE_HYBRID;
+      this.uiMode = PXInapp.UI_MODE_HYBRID;
       break;
     case 1:
-      uiModeEnum = PXInapp.UI_MODE_GAME;
+      this.uiMode = PXInapp.UI_MODE_GAME;
       break;
     case 2:
-      uiModeEnum = PXInapp.UI_MODE_SDK;
+      this.uiMode = PXInapp.UI_MODE_SDK;
       break;
     }
 
-    // int result = PXInapp.create(context, pxId, uiModeEnum, testMode);
-    int result = PXInapp.create(context, "A024805525452923568167231278837943681DC0739", PXInapp.UI_MODE_SDK, true);
+    int result = PXInapp.create(context, pxId, this.uiMode, testMode);
     PXInapp.setPaymentCallback(this);
     //This one is needed if the ui mode isn't (!!!)  UI_MODE_SDK
-    // PXInapp.setProductDialogCallback(context);
+
+    if (PXInapp.UI_MODE_SDK != this.uiMode) {
+      PXInapp.setProductDialogCallback(this);
+    }
+
     return result;
   }
 
@@ -132,9 +150,40 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback {
     
   }
 
+  @Override
+  public void onProductDialog( PXInappProduct product, boolean exitOnCancel ) {
+    if (exitOnCancel) {
+      this.cordova.getActivity().finish();
+    }
+  }
+
+  @Override
+  public void onTextDialog( int textID ) {
+    /*************** Drawing dialog page ***************/
+    /***** Display message *****/
+    // Text message is provided by PXInapp.getUITet( textID );
+    /***** Display “CONFIRM” button *****/
+    // Text label is provided by PXInapp.getUITet( TXTID_UI_BTN_CONFIRM );
+    // Click calls PXInapp.textDialogResult( textID, true );
+    /***** Display “CANCEL” button *****/
+    // Text label is provided by PXInapp.getUITet( TXTID_UI_BTN_BACK
+  }
+
   private String fetchProduct(int productId) {
     PXInappProduct product = PXInapp.getInappProduct(productId);
     
+    if (null == product) {
+      return "no product";
+    }
+
     return product.priceString;
+  }
+
+  private int buyProduct(int productId) {
+      int result = PXInapp.RESULT_FAILED;
+      if (PXInapp.UI_MODE_SDK == this.uiMode) {
+        result = PXInapp.startSdkUI(productId, null);
+      }
+      return result;
   }
 }
