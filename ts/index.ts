@@ -1,6 +1,5 @@
 class PXInApp {
     constructor() {
-        //
     }
 
     public setup(id: any, mode: UIMode, test: any): Promise<void> {

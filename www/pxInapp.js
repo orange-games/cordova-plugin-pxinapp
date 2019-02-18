@@ -6,7 +6,6 @@ var UIMode;
 })(UIMode || (UIMode = {}));
 var PXInApp = /** @class */ (function () {
     function PXInApp() {
-        //
     }
     PXInApp.prototype.setup = function (id, mode, test) {
         return new Promise(function (resolve, reject) {

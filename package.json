@@ -1,6 +1,6 @@
 {
   "name": "@orange-games/cordova-plugin-pxinapp",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "git@github.com:orange-games/cordova-plugin-pxinapp.git",
   "cordova": {
     "id": "cordova-plugin-pxinapp",
@@ -30,6 +30,7 @@
     "@types/cordova": "0.0.34"
   },
   "dependencies": {
-    "@types/es6-promise": "^3.3.0"
+    "@types/es6-promise": "^3.3.0",
+    "eventemitter3": "^3.1.0"
   }
 }

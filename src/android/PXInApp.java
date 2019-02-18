@@ -3,19 +3,34 @@ package com.orangegames.cordova.plugin;
 // SFR's PXInApp native SDK
 import fr.pixtel.pxinapp.PXInapp;
 import fr.pixtel.pxinapp.PXInappProduct;
+
+//Google/android
 import android.content.Context;
+import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
+import com.google.gson.FieldNamingPolicy;
 
 // Cordova-required packages
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaWebView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, PXInapp.ProductDialogCallback {
   private int uiMode;
-  
+
+  private CallbackContext paymentCallbackContext;
+
+  @Override
+  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+    super.initialize(cordova, webView);
+    // your init code here
+  }
+
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     JSONObject options;
@@ -56,6 +71,7 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, P
       callbackContext.sendPluginResult(pluginResult);
       return true;
     } else if ("buyProduct".equals(action)) {
+      this.paymentCallbackContext = callbackContext;
       int productId = options.getInt("productId");
       int productResult = this.buyProduct(productId);
 
@@ -65,8 +81,6 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, P
         return false;
       }
 
-      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, productResult);
-      callbackContext.sendPluginResult(pluginResult);
       return true;
     }
 
@@ -147,7 +161,15 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, P
 
   @Override
   public void onPayment( PXInappProduct product, int result ) {
-    
+
+    if (result < 0) {
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, Integer.toString(result));
+      this.paymentCallbackContext.sendPluginResult(pluginResult);
+      return;
+    }
+
+    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, this.productToJson(product));
+    this.paymentCallbackContext.sendPluginResult(pluginResult);
   }
 
   @Override
@@ -176,7 +198,7 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, P
       return "no product";
     }
 
-    return product.priceString;
+    return this.productToJson(product);
   }
 
   private int buyProduct(int productId) {
@@ -185,5 +207,13 @@ public class PXInApp extends CordovaPlugin implements PXInapp.PaymentCallback, P
         result = PXInapp.startSdkUI(productId, null);
       }
       return result;
+  }
+
+  private String productToJson(PXInappProduct product) {
+    Gson gson = new GsonBuilder()
+      .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+      .create();
+
+    return gson.toJson(product);
   }
 }
